@@ -46,9 +46,21 @@
                             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirm_delete_project<?= $file ?>">
                                 Supprimer
                             </button>
+                            
+                            <form method="post" action="/">
+                                <div class="form-group">
+
+                                    <button type="submit" class="btn btn-secondary" name="openinvscode<?=$file?>">
+                                        Ouvrir dans VsCode
+                                    </button>
+                                </div>
+                            </form>
                         </td>
                     </tr>
                     <?php
+                    if(isset($_POST["openinvscode$file"])){
+                        openInVsCode($file);
+                    }
                     $files_in_project = scanProjectDirectory($file);
                     ?>
                     <div class="modal fade" id="confirm_delete_project<?= $file ?>" tabindex="-1" aria-labelledby="confirm_delete_project" aria-hidden="true">
@@ -129,6 +141,14 @@ function deleteProject($project)
         unlink($project . '/' . $file);
     }
     rmdir($project);
+}
+
+## Open in vsCode
+function openInVsCode($project)
+{
+    $path =  getcwd(). '/' . $project;
+    $command = "code $path";
+    exec($command);
 }
 
 if (isset($_POST['nameproject'])) {
